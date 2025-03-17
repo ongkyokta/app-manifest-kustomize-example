@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-manager
+  namespace: argocd
+spec:
+  destination:
+    name: gke_ajaib-prd-platform_asia-southeast2_ajaib-prd-platform-cluster-0
+    namespace: kafka-manager
+  project: default
+  source:
+    path: kafka-manager/overlays/production/prd-platform-cluster-0/configs
+    repoURL: https://github.com/ajaibid/infra-k8s-platform-manifest.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true

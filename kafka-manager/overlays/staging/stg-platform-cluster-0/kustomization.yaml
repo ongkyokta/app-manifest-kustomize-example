@@ -1,0 +1,32 @@
+namespace: kafka-manager
+
+resources:
+  - ../../../base
+
+transformers:
+  - metadata-labels.yaml
+
+patches:
+- patch: |-
+    - op: add
+      path: "/spec/template/spec/nodeSelector"
+      value:
+        cloud.google.com/gke-preemptible: 'true'
+    - op: add
+      path: "/spec/template/spec/tolerations"
+      value:
+        - effect: NoSchedule
+          key: cloud.google.com/gke-preemptible
+          operator: Equal
+          value: 'true'
+    - op: replace
+      path: "/spec/template/spec/containers/0/env/0"
+      value:
+        name: ZK_HOSTS
+        value: "zookeeper-1.platform.stg.ajaib.int:2181,zookeeper-2.platform.stg.ajaib.int:2181,zookeeper-3.platform.stg.ajaib.int:2181,zookeeper-1.coin.stg.ajaib.int:2181,zookeeper-2.coin.stg.ajaib.int:2181,zookeeper-3.coin.stg.ajaib.int:2181,zookeeper-2-1.coin.stg.ajaib.int:2181,zookeeper-2-2.coin.stg.ajaib.int:2181,zookeeper-2-3.coin.stg.ajaib.int:2181,zookeeper-3-1.coin.stg.ajaib.int:2181,zookeeper-3-2.coin.stg.ajaib.int:2181,zookeeper-3-3.coin.stg.ajaib.int:2181"
+  target:
+    kind: Deployment
+    name: kafka-manager
+
+generators:
+- secret-generator.yaml

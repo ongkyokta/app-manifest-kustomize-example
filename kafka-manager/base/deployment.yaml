@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-manager
+  labels:
+    app.kubernetes.io/name: kafka-manager
+    app.kubernetes.io/instance: kafka
+    app.kubernetes.io/component: kafka-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kafka-manager
+      app.kubernetes.io/instance: kafka
+      app.kubernetes.io/component: kafka-manager
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kafka-manager
+        app.kubernetes.io/instance: kafka
+        app.kubernetes.io/component: kafka-manager
+    spec:
+      containers:
+      - name: kafka-manager
+        image: hlebalbau/kafka-manager:stable
+        ports:
+        - name: kafka-m-port
+          containerPort: 80
+        env:
+        - name: ZK_HOSTS
+          value: "zookeeper-0.zookeeper-headless.kafka.svc.cluster.local:2181,zookeeper-1.zookeeper-headless.kafka.svc.cluster.local:2181,zookeeper-2.zookeeper-headless.kafka.svc.cluster.local:2181"
+        - name: KAFKA_MANAGER_AUTH_ENABLED
+          value: "true"
+        - name: KAFKA_MANAGER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: KAFKA_MANAGER_USER
+              name: kafka-manager-auth
+        - name: KAFKA_MANAGER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: KAFKA_MANAGER
+              name: kafka-manager-auth
+        command:
+        - /kafka-manager/bin/cmak
+        - -Dpidfile.path=/dev/null
+        - -Dhttp.port=80

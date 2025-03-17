@@ -1,0 +1,19 @@
+apiVersion: builtin
+kind: LabelTransformer
+metadata:
+  name: metadata-labels
+labels:
+  app.kubernetes.io/name: kafka-manager
+  app.kubernetes.io/instance: kafka
+  app.kubernetes.io/component: kafka-manager
+  environment: "staging"
+  cluster_name: "stg-platform-cluster-0"
+  service_group: "infra"
+  service_type: "tools"
+  service_name: "kafka-manager"
+fieldSpecs:
+- path: metadata/labels
+  create: true
+- path: spec/template/metadata/labels
+  kind: Deployment
+  create: true

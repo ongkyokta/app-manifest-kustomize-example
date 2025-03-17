@@ -1,0 +1,21 @@
+namespace: kafka-manager
+
+resources:
+  - ../../../../base
+
+transformers:
+  - metadata-labels.yaml
+
+patches:
+- patch: |-
+    - op: replace
+      path: "/spec/template/spec/containers/0/env/0"
+      value:
+        name: ZK_HOSTS
+        value: "zookeeper-1.platform.prd.ajaib.int:2181,zookeeper-2.platform.prd.ajaib.int:2181,zookeeper-3.platform.prd.ajaib.int:2181,zookeeper-1.coin.prd.ajaib.int:2181,zookeeper-2.coin.prd.ajaib.int:2181,zookeeper-3.coin.prd.ajaib.int:2181,zookeeper-2-1.coin.prd.ajaib.int:2181,zookeeper-2-2.coin.prd.ajaib.int:2181,zookeeper-2-3.coin.prd.ajaib.int:2181,zookeeper-3-1.coin.prd.ajaib.int:2181,zookeeper-3-2.coin.prd.ajaib.int:2181,zookeeper-3-3.coin.prd.ajaib.int:2181,zookeeper-4-1.coin.prd.ajaib.int:2181,zookeeper-4-2.coin.prd.ajaib.int:2181,zookeeper-4-3.coin.prd.ajaib.int:2181,zookeeper-5-1.coin.prd.ajaib.int:2181,zookeeper-5-2.coin.prd.ajaib.int:2181,zookeeper-5-3.coin.prd.ajaib.int:2181"
+  target:
+    kind: Deployment
+    name: kafka-manager
+
+generators:
+- secret-generator.yaml

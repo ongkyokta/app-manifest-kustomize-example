@@ -1,0 +1,4 @@
+namePrefix: prd-platform-
+
+resources:
+- kafka-manager.yaml
